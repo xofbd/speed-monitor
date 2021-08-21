@@ -10,7 +10,7 @@ Make sure you have the following installed:
 ## How it works
 There are two scripts:
 * `src/speed-test` creates a JSON with the network speed results
-& `src/process-results` processes and condenses all the JSONs for a given day into one JSON file
+* `src/process-results` processes and condenses all the JSONs for a given day into one JSON file
 
 With these two scripts, you can set up cron jobs to run snapshots at a set interval and process the generated JSONs. For example:
 
