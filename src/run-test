@@ -1,0 +1,10 @@
+#!/bin/bash
+
+dir=$(dirname $0)
+data_dir=${dir/src/data/snapshots}
+mkdir -p $data_dir
+
+path_out=$data_dir"/output_"$(date +"%Y-%m-%d-%H:%M:%S")".json"
+
+speedtest -f json > $path_out
+

@@ -1,0 +1,74 @@
+#!/usr/bin/python3
+"""
+Create a JSON of all processed results for a given date.
+"""
+from datetime import datetime
+import json
+from pathlib import Path
+
+DIR_SNAPSHOTS = Path(__file__).parents[1] / 'data' / 'snapshots'
+DIR_DAILY = Path(__file__).parents[1] / 'data' / 'processed'
+
+
+def process_daily_results(date):
+    """Return list of processed results for each JSONs of a given date."""
+    return [
+        calc_download_upload_speeds(path)
+        for path in DIR_SNAPSHOTS.glob(f'output_{date}-*.json')
+    ]
+
+
+def calc_download_upload_speeds(path):
+    """Return dictionary with download and upload results."""
+    def calc_speed(data, key):
+        return 8 * data[key]['bytes'] / data[key]['elapsed'] / 1000
+
+    with path.open('r') as f:
+        data = json.load(f)
+
+    # Note: The time is taken from the filename rather than from the JSON. The
+    # difference will only be about 30 seconds and the resulting time string
+    # will be in local timezone as opposed to UTC.
+    return {
+        'time': str(path).split('-')[-1].split('.json')[0].strip(),
+        'download': calc_speed(data, 'download'),
+        'upload': calc_speed(data, 'upload')
+    }
+
+
+def dump_data(data, date):
+    """Create JSON with processed daily results."""
+    if not DIR_DAILY.exists():
+        DIR_DAILY.mkdir()
+
+    with (DIR_DAILY / Path(f'processed_{date}.json')).open('w') as f:
+        json.dump(data, f, indent=2)
+
+
+def main(date=None):
+    if date is None:
+        date = datetime.now().strftime('%Y-%m-%d')
+
+    data_all = process_daily_results(date)
+    dump_data(data_all, date)
+
+
+if __name__ == '__main__':
+    from argparse import ArgumentParser
+
+    parser = ArgumentParser(
+        description='Process and condense daily results into one JSON.'
+    )
+    parser.add_argument(
+        '--date',
+        type=str,
+        default=None,
+        help=(
+            'Date of results to process, e.g., 2021-08-01. '
+            'Defaults to the current date.'
+        )
+    )
+
+    args = parser.parse_args()
+
+    main(date=args.date)
