@@ -33,11 +33,8 @@ def calc_download_upload_speeds(path):
     if 'error' in data:
         return None
 
-    # Note: The time is taken from the filename rather than from the JSON. The
-    # difference will only be about 30 seconds and the resulting time string
-    # will be in local timezone as opposed to UTC.
     return {
-        'time': str(path).split('-')[-1].split('.json')[0].strip(),
+        'time': data['timestamp'],
         'download': calc_speed(data, 'download'),
         'upload': calc_speed(data, 'upload')
     }
