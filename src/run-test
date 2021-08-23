@@ -7,4 +7,3 @@ mkdir -p $data_dir
 path_out=$data_dir"/output_"$(date +"%Y-%m-%dT%H:%M:%S")".json"
 
 speedtest -f json > $path_out
-
