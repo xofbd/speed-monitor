@@ -5,7 +5,7 @@ A simple internet speed monitoring script using [Ookla's Speedtest CLI](https://
 Make sure you have the following installed:
 
 1. [Ookla's Speedtest CLI](https://www.speedtest.net/apps/cli)
-1. Python 3
+1. Python 3.8+
 
 ## How it works
 There are two scripts:

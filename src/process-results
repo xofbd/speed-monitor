@@ -13,8 +13,9 @@ DIR_DAILY = Path(__file__).parents[1] / 'data' / 'processed'
 def process_daily_results(date):
     """Return list of processed results for each JSONs of a given date."""
     return [
-        calc_download_upload_speeds(path)
-        for path in DIR_SNAPSHOTS.glob(f'output_{date}-*.json')
+        result
+        for path in DIR_SNAPSHOTS.glob(f'output_{date}*.json')
+        if (result := calc_download_upload_speeds(path)) is not None
     ]
 
 
@@ -24,7 +25,13 @@ def calc_download_upload_speeds(path):
         return 8 * data[key]['bytes'] / data[key]['elapsed'] / 1000
 
     with path.open('r') as f:
-        data = json.load(f)
+        try:
+            data = json.load(f)
+        except json.JSONDecodeError:
+            return None
+
+    if 'error' in data:
+        return None
 
     # Note: The time is taken from the filename rather than from the JSON. The
     # difference will only be about 30 seconds and the resulting time string
