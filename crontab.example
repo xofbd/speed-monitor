@@ -1,0 +1,20 @@
+# Example of automating with cron the speed test and processing the daily snapshots
+# You can edit your crontab by running `crontab -e`
+# Make sure you have built the Docker image first
+# 
+# The first line runs the tests every 30 minutes from 9am to 6pm
+# The second line runs the daily processing at 6:02pm
+#
+# https://crontab.guru/ is a great resource for editing crontab
+
+# If not using Docker
+0,30 9-18 * * * /path/to/speed-monitor/src/run-test
+2 18 * * * /path/to/speed-monitor/src/process-results
+
+# If using Docker and GNU Make
+0,30 9-18 * * * cd /path/to/speed-monitor && make run
+2 18 * * * cd /path/to/speed-monitor && make daily
+
+# If using Docker but not GNU Make
+0,30 9-18 * * * cd /path/to/speed-monitor && docker run --rm -v $(PWD)/data/snapshots:data/snapshots speed-monitor
+2 18 * * * cd /path/to/speed-monitor && docker run --rm -v $(PWD)/data/snapshots:/data/snapshots speed-monitor /src/process-results
