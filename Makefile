@@ -1,22 +1,33 @@
 SHELL := /bin/bash
 TZ ?= UTC
 
-docker_image := speed-test
+docker_image := speed-monitor
 
-all: docker-run
+all: run
 
-.PHONY: docker-build
-docker-build:
+data/snapshots:
+	mkdir -p $@
+
+.PHONY: image | data/snapshots
+image:
 	docker build \
 		-t $(docker_image) \
 		--build-arg USER_ID=$$(id -u) \
 		--build-arg GROUP_ID=$$(id -g) \
 		.
 
-.PHONY: docker-run
-docker-run: docker-build
+.PHONY: run
+run: image | data/snapshots
 	docker run \
 		--rm \
 		-v $(PWD)/data/snapshots:/data/snapshots \
 		-e TZ=$(TZ) \
 		$(docker_image)
+
+.PHONY: daily
+daily: image
+	docker run \
+		--rm \
+		-v $(PWD)/data/snapshots:/data/snapshots \
+		$(docker_image) \
+		/src/process-results
