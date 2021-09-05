@@ -11,7 +11,7 @@ RUN adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID user
 ENV os=debian
 ENV dist=bullseye 
 
-RUN apt-get update && apt-get install -y curl wget
+RUN apt-get update && apt-get install -y curl python3
 RUN curl -s https://install.speedtest.net/app/cli/install.deb.sh | bash
 RUN apt-get install -y speedtest
 
