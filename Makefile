@@ -28,6 +28,6 @@ run: image | data/snapshots
 daily: image
 	docker run \
 		--rm \
-		-v $(PWD)/data/snapshots:/data/snapshots \
+		-v $(PWD)/data:/data \
 		$(docker_image) \
 		process-results

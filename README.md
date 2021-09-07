@@ -22,7 +22,7 @@ and run the test with
 * `docker run --rm -v $(PWD)/data/snapshots:data/snapshots speed-monitor`
 
 To run the daily processing script, run
-* `docker run --rm -v $(PWD)/data/snapshots:/data/snapshots speed-monitor process-results`
+* `docker run --rm -v $(PWD)/data/snapshots:/data speed-monitor process-results`
 
 ## Automation with cron
 You can set up cron jobs to run snapshots at a set interval and process the generated JSONs. For example:
