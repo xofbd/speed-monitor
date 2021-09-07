@@ -17,4 +17,4 @@
 
 # If using Docker but not GNU Make
 0,30 9-18 * * * cd /path/to/speed-monitor && docker run --rm -v $(PWD)/data/snapshots:data/snapshots speed-monitor
-2 18 * * * cd /path/to/speed-monitor && docker run --rm -v $(PWD)/data/snapshots:/data/snapshots speed-monitor /src/process-results
+2 18 * * * cd /path/to/speed-monitor && docker run --rm -v $(PWD)/data/snapshots:/data/snapshots speed-monitor process-results

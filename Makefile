@@ -30,4 +30,4 @@ daily: image
 		--rm \
 		-v $(PWD)/data/snapshots:/data/snapshots \
 		$(docker_image) \
-		/src/process-results
+		process-results

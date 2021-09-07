@@ -18,7 +18,8 @@ RUN apt-get install -y speedtest
 # Switch to host user and run the test
 USER user
 
-COPY src /src
 RUN speedtest --accept-license 1> /dev/null
+COPY src /src
+ENV PATH="/src:$PATH"
 
-CMD src/run-test
+CMD ["run-test"]
