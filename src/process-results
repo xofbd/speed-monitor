@@ -5,6 +5,8 @@ Create a JSON of all processed results for a given date.
 from datetime import datetime
 import json
 from pathlib import Path
+import re
+import sys
 
 DIR_SNAPSHOTS = Path(__file__).parents[1] / 'data' / 'snapshots'
 DIR_DAILY = Path(__file__).parents[1] / 'data' / 'processed'
@@ -49,7 +51,32 @@ def dump_data(data, date):
         json.dump(data, f, indent=2)
 
 
-def main(date=None):
+def find_missing_dates():
+    """
+    Return set of all dates that need processing
+
+    Note: Today's date is always included as this allows repeated calls to
+    update today's results given any new snapshots JSONs.
+    """
+    dates_snapshots = {
+        re.search(r'^output_(.+)T', path.name).group(1)
+        for path in DIR_SNAPSHOTS.glob('output_*.json')
+    }
+
+    dates_processed = {
+        re.search(r'^processed_(.+)\.json', path.name).group(1)
+        for path in DIR_DAILY.glob('processed_*.json')
+    } - {datetime.now().strftime('%Y-%m-%d')}
+
+    return dates_snapshots - dates_processed
+
+
+def main(date=None, auto=False):
+    if auto:
+        for date in find_missing_dates():
+            main(date=date, auto=False)
+        sys.exit(0)
+
     if date is None:
         date = datetime.now().strftime('%Y-%m-%d')
 
@@ -72,7 +99,15 @@ if __name__ == '__main__':
             'Defaults to the current date.'
         )
     )
-
+    parser.add_argument(
+        '--auto',
+        action='store_true',
+        help=(
+            'Whether to find all dates that need processing. '
+            'Defaults to False. '
+            'Setting this option ignores --date.'
+        )
+    )
     args = parser.parse_args()
 
-    main(date=args.date)
+    main(date=args.date, auto=args.auto)
