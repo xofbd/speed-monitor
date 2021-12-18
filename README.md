@@ -11,7 +11,7 @@ Make sure you have the following installed:
 
 ## How it works
 There are two scripts:
-* `src/speed-test` creates a JSON with the network speed results
+* `src/run-test` creates a JSON with the network speed results
 * `src/process-results` processes and condenses all the JSONs for a given day into one JSON file
 
 ## Using Docker
